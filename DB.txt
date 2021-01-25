@@ -1,0 +1,133 @@
+create database project;
+use project;
+
+
+CREATE TABLE admin(
+a_id VARCHAR(10) NOT NULL,
+a_pw INT(11) NOT NULL)CHARSET=UTF8; 
+
+insert into admin VALUES('admin', '123');
+SELECT * FROM admin;
+
+CREATE TABLE buser(
+c_class VARCHAR(10) PRIMARY key
+)CHARSET=UTF8;
+
+SELECT * FROM buser;
+INSERT INTO buser VALUES('내과');
+INSERT INTO buser VALUES('외과');
+INSERT INTO buser VALUES('신경과');
+INSERT INTO buser VALUES('정형외과');
+
+
+CREATE TABLE doctor(
+d_id VARCHAR(10) NOT NULL,
+d_pw INT(11) NOT NULL,
+d_number INT(11) PRIMARY KEY AUTO_INCREMENT,
+d_name VARCHAR(10) NOT NULL, 
+d_class varchar(10), FOREIGN KEY(d_class) references buser(c_class),
+d_email VARCHAR(30) NOT NULL,
+d_etc VARCHAR(30),
+d_image VARCHAR(30))CHARSET=UTF8; 
+
+insert into doctor(d_id, d_pw, d_name, d_class, d_email, d_etc) 
+VALUES('doctor1', 123, '김의사', '내과' ,'d_love1@naver.com','내과 입원전담 전문의');
+insert into doctor(d_id, d_pw, d_name, d_class, d_email, d_etc) 
+VALUES('doctor2', 123, '이의사','내과','d_love2@naver.com','당뇨병, 갑상선질환, 골다공증, 기타 내분비질환 전문의');
+
+insert into doctor(d_id, d_pw, d_name, d_class, d_email, d_etc) 
+VALUES('doctor3', 123, '임의사','외과','d_love3@naver.com','대장암, 치핵, 치루, 변실금, 변비 전문의');
+insert into doctor(d_id, d_pw, d_name, d_class, d_email, d_etc) 
+VALUES('doctor4', 123, '나의사','외과','d_love4@naver.com','대장암, 직장암, 복막암, 대장-직장 양성질환 전문의');
+
+insert into doctor(d_id, d_pw, d_name, d_class, d_email, d_etc) 
+VALUES('doctor5', 123, '박의사','신경과','d_love5@naver.com','뇌혈관질환, 뇌졸중, 뇌경색 치료 및 예방 전문의');
+insert into doctor(d_id, d_pw, d_name, d_class, d_email, d_etc) 
+VALUES('doctor6', 123, '남의사','신경과','d_love6@naver.com','손발저림클리닉, 말초신경 및 근육질환, 척추 전문의');
+
+insert into doctor(d_id, d_pw, d_name, d_class, d_email, d_etc) 
+VALUES('doctor7', 123, '심의사','정형외과', 'd_love7@naver.com','어깨관절, 스포츠 손상 전문의');
+insert into doctor(d_id, d_pw, d_name, d_class, d_email, d_etc) 
+VALUES('doctor8', 123, '사의사','정형외과','d_love8@naver.com','무릎관절, 관절염, 인대손상재건환 전문의');
+
+SELECT * FROM doctor;
+
+
+
+CREATE TABLE patient(
+p_id VARCHAR(10) NOT NULL,
+p_pw INT(11) NOT NULL,
+p_number INT(11) PRIMARY KEY AUTO_INCREMENT,
+p_name VARCHAR(10) NOT NULL, 
+p_gen VARCHAR(10) NOT NULL,
+p_email VARCHAR(30) NOT NULL,
+p_addr VARCHAR(30) NOT NULL,
+p_height INT(11) NOT NULL,
+p_weight INT(11) NOT NULL,
+p_tel VARCHAR(20) NOT NULL,
+p_birth VARCHAR(20) NOT NULL,
+p_etc VARCHAR(30)
+)CHARSET=UTF8; 
+
+
+insert into patient VALUES('patient1',123, 1,'김환자','여자','hope_1@naver.com','서울 서대문구 신수동', 167, 57, 
+'010-1000-1001', '1997-08-14',  '빠른 진단 요망');
+insert into patient VALUES('patient2',123, 2,'이환자','남자','hope_2@naver.com','서울 마포구 대흥동', 177, 74, 
+'010-1000-1002', '1997-08-15', '정확한 진단 요망');
+insert into patient VALUES('patient3',123, 3,'나환자','여자','hope_3@naver.com','서울 마포구 염리동동', 157, 52,
+'010-1000-1003', '1997-08-16', '친절한 진단 요망');
+insert into patient VALUES('patient4',123, 4,'박환자','남자','hope_4@naver.com','서울 강남구 신현동', 182, 78,
+'010-1000-1004', '1997-08-17', '적절한 처방 요망');
+SELECT * FROM patient;
+
+
+create table td_board(td_num int(10) auto_increment primary KEY, 
+td_title varchar(50), 
+td_content VARCHAR(70), 
+td_date varchar(20),
+td_pn int(10), FOREIGN KEY(td_pn) references patient(p_number), 
+td_dn int(10), FOREIGN KEY(td_dn) references doctor(d_number))charset=UTF8;
+
+INSERT INTO td_board VALUES(1, '감기', '타이레놀을 처방하오니 식후 1정씩 하루 3번 복용바랍니다.',now(), 1, 1);
+INSERT INTO td_board VALUES(2, '외상', '항생제를 처방하오니 식후 1정씩 하루 3번 복용바랍니다. 상처를 물에 닿게 하지 마십시오',now(), 2, 3);
+INSERT INTO td_board VALUES(3, '근육경련', '혈액순환제를 처방하오니 식후 1정씩 하루 3번 복용바랍니다.',now(), 3, 5);
+INSERT INTO td_board VALUES(4, '타박상', '연고를 처방하오니 하루 3번 상처부위에 소독후 바르시기 바랍니다.',now(), 4, 7);
+
+select * from td_board;
+
+
+create table tp_board(tp_num INT(10) auto_increment primary KEY, 
+tp_medicine VARCHAR(50), 
+tp_tem float(10), 
+tp_content VARCHAR(70),
+tp_date varchar(20),
+tp_pn int(10), FOREIGN KEY(tp_pn) references patient(p_number), 
+tp_dn int(10), FOREIGN KEY(tp_dn) references doctor(d_number))charset=UTF8;
+
+INSERT INTO tp_board VALUES(1, '없음', 37.4, '미열이 나고 목이 아프며 잦은 기침이 납니다. 증상이 시작된지는 이틀째입니다.',now(), 1, 1);
+INSERT INTO tp
+
+create table appoint(ap_num int(10) auto_increment primary KEY,
+ap_pname varchar(30) NOT NULL,
+ap_buser_show varchar(30) NOT NULL,
+ap_doctor_show varchar(30) NOT NULL,
+ap_doctor_day varchar(30) NOT NULL,
+ap_doctor_time varchar(30) NOT NULL,
+ap_pbirth varchar(30) NOT NULL,
+ap_tell varchar(30) NOT NULL,
+ap_pno int(30), FOREIGN KEY(ap_pno) references patient(p_number)ON DELETE CASCADE, 
+ap_dno int(30), FOREIGN KEY(ap_dno) references doctor(d_number)ON DELETE CASCADE,
+ap_date varchar(20),
+ap_state varchar(20))charset=UTF8;
+
+create table shopboard(
+
+num int(5) primary key, name varchar(20) not null, 
+
+pass varchar(20) not null, mail varchar(30),
+
+title varchar(50), cont text, bip varchar(20), 
+
+bdate varchar(20), readcnt int(3),
+
+gnum int(5), onum int(3), nested int(3)) charset=utf8;
